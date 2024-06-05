@@ -2,9 +2,13 @@
 
 export(getIdx)
 export(getSupportSub)
+export(launchApp)
 export(recommend_by_attributes)
 export(recommend_by_max_cardinality)
 import(dplyr)
+import(fcaR)
 import(magrittr)
+import(shiny)
+import(shinyWidgets)
 importFrom(Matrix,which)
 importFrom(fcaR,FormalContext)
