@@ -229,6 +229,51 @@ ui <- fluidPage(
                  uiOutput("historic3")
                )
              )
+    ),
+    tabPanel("Tab 4: Interactive Graph",
+             fluidRow(
+               column(
+                 width = 4,
+                 fluidRow(
+                   column(
+                     width = 12,
+                     fileInput("file4", "Choose a CSV file (must be binary)",
+                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
+                   ),
+                   column(
+                     width = 3,
+                     checkboxInput("header4", "Header", TRUE)
+                   ),
+                   column(
+                     width = 3,
+                     radioButtons("sep4", "Delimiter",
+                                  choices = c(Comma = ",",
+                                              Semicolon = ";",
+                                              Tab = "\t"),
+                                  selected = ",")
+                   ),
+                   column(
+                     width = 3,
+                     radioButtons("quote4", "Quote",
+                                  choices = c(Nothing = "",
+                                              Double = '"',
+                                              Single = "'"),
+                                  selected = '"')
+                   ),
+                   column(
+                     width = 12,
+                     sliderInput("threshold4", "Confidence threshold:",
+                                 min = 0, max = 1, value = 0.8, step = 0.1)
+                   )
+                 )
+               ),
+
+               column(
+                 width = 8,
+                 visNetworkOutput("network"),
+                 verbatimTextOutput("selected_node_attributes")
+               )
+             )
     )
   )
 )

@@ -6,6 +6,8 @@
 #' @import dplyr
 #' @import magrittr
 #' @import fcaR
+#' @importFrom igraph graph add_vertices add_edges simplify as.undirected
+#' @import visNetwork
 #' @export
 #'
 #' @examples
@@ -15,6 +17,8 @@
 #' library(fcaR)
 #' library(shiny)
 #' library(shinyWidgets)
+#' library(igraph)
+#' library(visNetwork)
 #' launchApp()
 #' }
 launchApp <- function(){

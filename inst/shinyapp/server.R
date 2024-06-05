@@ -9,6 +9,8 @@ server <- function(input, output, session) {
   historicIdx <- reactiveVal(NULL)
   selectedIdx <- reactiveVal(NULL)
 
+  sublattice <- reactiveVal(NULL)
+
   observeEvent(input$file1, {
     req(input$file1)
 
@@ -355,6 +357,77 @@ server <- function(input, output, session) {
                     }),
                     "</ul>"))
       )
+    }
+  })
+
+  observeEvent(input$file4, {
+    req(input$file4)
+
+    inFile <- input$file4
+
+    data <- read.csv(inFile$datapath,
+                     header = input$header4,
+                     sep = input$sep4,
+                     quote = input$quote4,
+                     row.names = NULL,
+                     check.names = FALSE)
+
+    data_matrix <- as.matrix(data)
+
+    file_csv(data_matrix)
+
+    data_matrix <- file_csv()
+
+    fc2 <- FormalContext$new(data_matrix)
+
+    fc(fc2)
+
+    fc2$find_concepts()
+
+    concepts2 <- fc2$concepts
+
+    concepts(concepts2)
+  })
+
+  generate_graph <- function(threshold) {
+    req(input$file4)
+
+    concepts2 <- concepts()
+
+    idx <- which(concepts2$support() > threshold)
+
+    sublattice2 <- concepts2$sublattice(idx)
+
+    sublattice(sublattice2)
+
+    graph <- graph_sublattice(sublattice2)
+
+    vis_data <- toVisNetworkData(graph)
+
+    return(visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Grafo Interactivo") %>%
+             visIgraphLayout(layout = "layout_with_sugiyama") %>%
+             visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+             visInteraction(hover = TRUE) %>%
+             visEvents(click = "function(properties) {
+               var nodeId = properties.nodes[0];
+               Shiny.setInputValue('selected_node_id', nodeId);
+             }"))
+  }
+
+  output$network <- renderVisNetwork({
+    generate_graph(input$threshold4)
+  })
+
+  observeEvent(input$selected_node_id, {
+    selected_node <- input$selected_node_id
+    if (!is.null(selected_node)) {
+      sublattice2 <- sublattice()
+
+      attributes <- getAttributes(sublattice2, as.numeric(selected_node))
+      output$selected_node_attributes <- renderPrint({
+        cat("Atributos del nodo seleccionado:\n")
+        cat(paste(attributes, collapse = ", "))
+      })
     }
   })
 
