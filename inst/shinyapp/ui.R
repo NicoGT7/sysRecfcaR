@@ -145,6 +145,90 @@ ui <- fluidPage(
                  DT::dataTableOutput("tabla2")
                )
              )
+    ),
+    tabPanel("Tab 3: Recommend through iterative conversation",
+             h2("Recommend through iterative conversation"),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "left",
+                 fluidRow(
+                   column(
+                     width = 3,
+                     fileInput("file3", "Choose a CSV file (must be binary)",
+                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
+                   ),
+                   column(
+                     width = 1,
+                     checkboxInput("header3", "Header", TRUE)
+                   ),
+                   column(
+                     width = 1,
+                     radioButtons("sep3", "Delimiter",
+                                  choices = c(Comma = ",",
+                                              Semicolon = ";",
+                                              Tab = "\t"),
+                                  selected = ",")
+                   ),
+                   column(
+                     width = 1,
+                     radioButtons("quote3", "Quote",
+                                  choices = c(Nothing = "",
+                                              Double = '"',
+                                              Single = "'"),
+                                  selected = '"')
+                   )
+                 )
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 6,
+                 align = "right",
+                 sliderInput("threshold3", "Confidence threshold:",
+                             min = 0, max = 1, value = 0.5, step = 0.05)
+               ),
+               column(
+                 width = 6,
+                 align = "left",
+                 pickerInput(
+                   inputId = "selectedAttributes3",
+                   label = div("Select the attributes:", class = "text-center"),
+                   choices = NULL,
+                   selected = NULL,
+                   multiple = TRUE
+                 )
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 actionButton("saveButton3", "Calculate")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 DT::dataTableOutput("tabla3")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 textOutput("selectedIdxText3"),
+                 uiOutput("validateButton3")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("historic3")
+               )
+             )
     )
   )
 )
