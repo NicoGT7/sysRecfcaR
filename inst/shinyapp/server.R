@@ -323,13 +323,6 @@ server <- function(input, output, session) {
     generate_graph(input$threshold4)
   })
 
-  observeEvent(input$threshold4, {
-    shinyjs::hide("saveButton4")
-    shinyjs::hide("tabla4")
-    shinyjs::hide("dropdown4")
-    shinyjs::hide("selected_node_attributes")
-  })
-
   observeEvent(input$selected_node_id, {
     selected_node <- input$selected_node_id
     if (!is.null(selected_node)) {
@@ -345,8 +338,6 @@ server <- function(input, output, session) {
       idxNode(selected_node)
 
       shinyjs::show("saveButton4")
-      shinyjs::show("tabla4")
-      shinyjs::show("dropdown4")
     }
   })
 
@@ -370,6 +361,21 @@ server <- function(input, output, session) {
     dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
 
     return(dfSubconceptos)
+  })
+
+  observeEvent(input$threshold4, {
+    updatePickerInput(session, "atributosProb4", choices = attributes())
+    shinyjs::hide("saveButton4")
+    shinyjs::hide("tabla4")
+    shinyjs::hide("dropdown4")
+    shinyjs::hide("selected_node_attributes")
+  })
+
+  observeEvent(input$saveButton4, {
+    if (!is.null(calcular4())) {
+      shinyjs::show("tabla4")
+      shinyjs::show("dropdown4")
+    }
   })
 
   output$tabla4 <- DT::renderDataTable({
