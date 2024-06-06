@@ -3,6 +3,7 @@
 #' @return This function does not return anything. It initiates a Shiny app
 #' @import shiny
 #' @import shinyWidgets
+#' @importFrom shinyjs useShinyjs hide show
 #' @import dplyr
 #' @import magrittr
 #' @import fcaR

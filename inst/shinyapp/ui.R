@@ -1,9 +1,10 @@
 ui <- fluidPage(
+  shinyjs::useShinyjs(),
   titlePanel("RECOMMENDATION SYSTEM BASED ON FORMAL CONCEPT ANALYSIS"),
 
   tabsetPanel(
-    tabPanel("Tab 1: Recommend by Attributes",
-             h2("Recommend by Attributes"),
+    tabPanel("Tab 1: Data import",
+             h2("Upload file"),
              fluidRow(
                column(
                  width = 12,
@@ -36,7 +37,10 @@ ui <- fluidPage(
                    )
                  )
                )
-             ),
+             )
+    ),
+    tabPanel("Tab 2: Recommend by Attributes",
+             h2("Recommend by Attributes"),
              fluidRow(
                column(
                  width = 12,
@@ -71,41 +75,8 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 2: Recommend by Max Cardinality",
+    tabPanel("Tab 3: Recommend by Max Cardinality",
              h2("Recommend by Max Cardinality"),
-             fluidRow(
-               column(
-                 width = 12,
-                 align = "left",
-                 fluidRow(
-                   column(
-                     width = 3,
-                     fileInput("file2", "Choose a CSV file (must be binary)",
-                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
-                   ),
-                   column(
-                     width = 1,
-                     checkboxInput("header2", "Header", TRUE)
-                   ),
-                   column(
-                     width = 1,
-                     radioButtons("sep2", "Delimiter",
-                                  choices = c(Comma = ",",
-                                              Semicolon = ";",
-                                              Tab = "\t"),
-                                  selected = ",")
-                   ),
-                   column(
-                     width = 1,
-                     radioButtons("quote2", "Quote",
-                                  choices = c(Nothing = "",
-                                              Double = '"',
-                                              Single = "'"),
-                                  selected = '"')
-                   )
-                 )
-               )
-             ),
              fluidRow(
                column(
                  width = 6,
@@ -146,41 +117,8 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 3: Recommend through iterative conversation",
+    tabPanel("Tab 4: Recommend through iterative conversation",
              h2("Recommend through iterative conversation"),
-             fluidRow(
-               column(
-                 width = 12,
-                 align = "left",
-                 fluidRow(
-                   column(
-                     width = 3,
-                     fileInput("file3", "Choose a CSV file (must be binary)",
-                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
-                   ),
-                   column(
-                     width = 1,
-                     checkboxInput("header3", "Header", TRUE)
-                   ),
-                   column(
-                     width = 1,
-                     radioButtons("sep3", "Delimiter",
-                                  choices = c(Comma = ",",
-                                              Semicolon = ";",
-                                              Tab = "\t"),
-                                  selected = ",")
-                   ),
-                   column(
-                     width = 1,
-                     radioButtons("quote3", "Quote",
-                                  choices = c(Nothing = "",
-                                              Double = '"',
-                                              Single = "'"),
-                                  selected = '"')
-                   )
-                 )
-               )
-             ),
              fluidRow(
                column(
                  width = 6,
@@ -230,36 +168,11 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 4: Interactive Graph",
+    tabPanel("Tab 5: Interactive Graph",
              fluidRow(
                column(
                  width = 4,
                  fluidRow(
-                   column(
-                     width = 12,
-                     fileInput("file4", "Choose a CSV file (must be binary)",
-                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
-                   ),
-                   column(
-                     width = 3,
-                     checkboxInput("header4", "Header", TRUE)
-                   ),
-                   column(
-                     width = 3,
-                     radioButtons("sep4", "Delimiter",
-                                  choices = c(Comma = ",",
-                                              Semicolon = ";",
-                                              Tab = "\t"),
-                                  selected = ",")
-                   ),
-                   column(
-                     width = 3,
-                     radioButtons("quote4", "Quote",
-                                  choices = c(Nothing = "",
-                                              Double = '"',
-                                              Single = "'"),
-                                  selected = '"')
-                   ),
                    column(
                      width = 12,
                      sliderInput("threshold4", "Confidence threshold:",
@@ -267,11 +180,30 @@ ui <- fluidPage(
                    )
                  )
                ),
-
                column(
                  width = 8,
                  visNetworkOutput("network"),
                  verbatimTextOutput("selected_node_attributes")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 actionButton("saveButton4", "Calculate", style = "display: none;")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("dropdown4")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 DT::dataTableOutput("tabla4")
                )
              )
     )

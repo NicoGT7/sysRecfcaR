@@ -10,6 +10,7 @@ server <- function(input, output, session) {
   selectedIdx <- reactiveVal(NULL)
 
   sublattice <- reactiveVal(NULL)
+  idxNode <- reactiveVal(NULL)
 
   observeEvent(input$file1, {
     req(input$file1)
@@ -44,6 +45,8 @@ server <- function(input, output, session) {
     attributes(attributes2)
 
     updatePickerInput(session, "selectedAttributes1", choices = attributes())
+    updatePickerInput(session, "selectedAttributes2", choices = attributes())
+    updatePickerInput(session, "selectedAttributes3", choices = attributes())
 
   })
 
@@ -108,42 +111,6 @@ server <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$file2, {
-    req(input$file2)
-
-    inFile <- input$file2
-
-    data <- read.csv(inFile$datapath,
-                     header = input$header2,
-                     sep = input$sep2,
-                     quote = input$quote2,
-                     row.names = NULL,
-                     check.names = FALSE)
-
-    data_matrix <- as.matrix(data)
-
-    file_csv(data_matrix)
-
-    data_matrix <- file_csv()
-
-    fc2 <- FormalContext$new(data_matrix)
-
-    fc(fc2)
-
-    fc2$find_concepts()
-
-    concepts2 <- fc2$concepts
-
-    concepts(concepts2)
-
-    attributes2 <- fc2$attributes
-
-    attributes(attributes2)
-
-    updatePickerInput(session, "selectedAttributes2", choices = attributes())
-
-  })
-
   calcular2 <- eventReactive(input$saveButton2, {
     req(input$saveButton2)
     selected <- input$selectedAttributes2
@@ -182,42 +149,6 @@ server <- function(input, output, session) {
 
   output$tabla2 <- DT::renderDataTable({
     calcular2()
-  })
-
-  observeEvent(input$file3, {
-    req(input$file3)
-
-    inFile <- input$file3
-
-    data <- read.csv(inFile$datapath,
-                     header = input$header3,
-                     sep = input$sep3,
-                     quote = input$quote3,
-                     row.names = NULL,
-                     check.names = FALSE)
-
-    data_matrix <- as.matrix(data)
-
-    file_csv(data_matrix)
-
-    data_matrix <- file_csv()
-
-    fc2 <- FormalContext$new(data_matrix)
-
-    fc(fc2)
-
-    fc2$find_concepts()
-
-    concepts2 <- fc2$concepts
-
-    concepts(concepts2)
-
-    attributes2 <- fc2$attributes
-
-    attributes(attributes2)
-
-    updatePickerInput(session, "selectedAttributes3", choices = attributes())
-
   })
 
   calcular3 <- eventReactive(input$saveButton3, {
@@ -281,6 +212,9 @@ server <- function(input, output, session) {
     fc2 <- fc()
     concepts2 <- concepts()
     attributes2 <- attributes()
+
+    updatePickerInput(session, "selectedAttributes3", choices = attributes(),
+                      selected = getAttributes(concepts2, idxConcept))
 
     dfSubconceptos <- as.data.frame(getSupportSub(concepts2, idxConcept))
 
@@ -360,37 +294,8 @@ server <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$file4, {
-    req(input$file4)
-
-    inFile <- input$file4
-
-    data <- read.csv(inFile$datapath,
-                     header = input$header4,
-                     sep = input$sep4,
-                     quote = input$quote4,
-                     row.names = NULL,
-                     check.names = FALSE)
-
-    data_matrix <- as.matrix(data)
-
-    file_csv(data_matrix)
-
-    data_matrix <- file_csv()
-
-    fc2 <- FormalContext$new(data_matrix)
-
-    fc(fc2)
-
-    fc2$find_concepts()
-
-    concepts2 <- fc2$concepts
-
-    concepts(concepts2)
-  })
-
   generate_graph <- function(threshold) {
-    req(input$file4)
+    req(input$file1)
 
     concepts2 <- concepts()
 
@@ -418,17 +323,92 @@ server <- function(input, output, session) {
     generate_graph(input$threshold4)
   })
 
+  observeEvent(input$threshold4, {
+    shinyjs::hide("saveButton4")
+    shinyjs::hide("tabla4")
+    shinyjs::hide("dropdown4")
+    shinyjs::hide("selected_node_attributes")
+  })
+
   observeEvent(input$selected_node_id, {
     selected_node <- input$selected_node_id
     if (!is.null(selected_node)) {
+      shinyjs::show("selected_node_attributes")
       sublattice2 <- sublattice()
-
       attributes <- getAttributes(sublattice2, as.numeric(selected_node))
+
       output$selected_node_attributes <- renderPrint({
-        cat("Atributos del nodo seleccionado:\n")
+        cat("Attributes of the selected node:\n")
         cat(paste(attributes, collapse = ", "))
       })
+
+      idxNode(selected_node)
+
+      shinyjs::show("saveButton4")
+      shinyjs::show("tabla4")
+      shinyjs::show("dropdown4")
     }
   })
 
+  calcular4 <- eventReactive(input$saveButton4, {
+    req(input$saveButton4)
+    sublattice2 <- sublattice()
+    idxNode2 <- idxNode()
+    selected <- getAttributes(sublattice2, idxNode2)
+
+    fc2 <- fc()
+
+    set_attributes <- Set$new(fc2$attributes)
+    set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
+
+    s <- fc2$closure(set_attributes)
+
+    concepts2 <- concepts()
+
+    idxConcept <- getIdx(concepts2, s)
+
+    dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
+
+    return(dfSubconceptos)
+  })
+
+  output$tabla4 <- DT::renderDataTable({
+    req(input$atributosProb4)
+
+    columna <- input$atributosProb4
+
+    final_result <- data.frame()
+
+    for (i in 1:length(columna)) {
+
+      res <- calcular4() %>% filter(.data[[columna[i]]] == 1)
+
+      result <- res[1,1:2]
+
+      result$atr <- columna[i]
+
+      for (col in 3:ncol(res)) {
+        if (any(res[1,col] == 1)) {
+          result <- cbind(result, res[1,col, drop = FALSE])
+        }
+      }
+
+      final_result <- bind_rows(final_result, result)
+      final_result[is.na(final_result)] <- 0
+
+    }
+    return(final_result)
+  })
+
+  output$dropdown4 <- renderUI({
+    if (!is.null(calcular4())) {
+      pickerInput(
+        inputId = "atributosProb4",
+        label = div("Select the attributes to calculate probability:", class = "text-center"),
+        choices = attributes(),
+        selected = NULL,
+        multiple = TRUE
+      )
+    }
+  })
 }
