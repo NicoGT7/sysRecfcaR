@@ -12,6 +12,11 @@ server <- function(input, output, session) {
   sublattice <- reactiveVal(NULL)
   idxNode <- reactiveVal(NULL)
 
+  exportData1 <- reactiveVal(NULL)
+  exportData2 <- reactiveVal(NULL)
+  exportData3 <- reactiveVal(NULL)
+  exportData4 <- reactiveVal(NULL)
+
   observeEvent(input$file1, {
     req(input$file1)
 
@@ -96,6 +101,8 @@ server <- function(input, output, session) {
 
     }
 
+    exportData1(final_result)
+
     return(final_result)
   })
 
@@ -110,6 +117,22 @@ server <- function(input, output, session) {
       )
     }
   })
+
+  output$downloadButtonUI1 <- renderUI({
+    if (!is.null(exportData1())) {
+      downloadButton("downloadData1", "Download CSV")
+    }
+  })
+
+  output$downloadData1 <- downloadHandler(
+    filename = function() {
+      paste("recomendacionAttr.csv", sep = "")
+    },
+    content = function(file) {
+      df <- exportData1()
+      readr::write_csv(df, file)
+    }
+  )
 
   calcular2 <- eventReactive(input$saveButton2, {
     req(input$saveButton2)
@@ -144,12 +167,30 @@ server <- function(input, output, session) {
 
     result$ones <- NULL
 
+    exportData2(result)
+
     return(result)
   })
 
   output$tabla2 <- DT::renderDataTable({
     calcular2()
   })
+
+  output$downloadButtonUI2 <- renderUI({
+    if (!is.null(exportData2())) {
+      downloadButton("downloadData2", "Download CSV")
+    }
+  })
+
+  output$downloadData2 <- downloadHandler(
+    filename = function() {
+      paste("recomendacionMC.csv", sep = "")
+    },
+    content = function(file) {
+      df <- exportData2()
+      readr::write_csv(df, file)
+    }
+  )
 
   calcular3 <- eventReactive(input$saveButton3, {
     req(input$saveButton3)
@@ -185,6 +226,7 @@ server <- function(input, output, session) {
     result$ones <- NULL
 
     ultimaTabla(result)
+    exportData3(result)
 
     auxVector <- concepts2$sub(idxConcept)$get_intent()
     atrVector <- as.vector(t(as.matrix(auxVector$get_vector())))
@@ -235,6 +277,7 @@ server <- function(input, output, session) {
     result$ones <- NULL
 
     ultimaTabla(result)
+    exportData3(result)
 
     auxVector <- concepts2$sub(idxConcept)$get_intent()
     atrVector <- as.vector(t(as.matrix(auxVector$get_vector())))
@@ -294,6 +337,22 @@ server <- function(input, output, session) {
     }
   })
 
+  output$downloadButtonUI3 <- renderUI({
+    if (!is.null(exportData3())) {
+      downloadButton("downloadData3", "Download CSV")
+    }
+  })
+
+  output$downloadData3 <- downloadHandler(
+    filename = function() {
+      paste("recomendacionInt.csv", sep = "")
+    },
+    content = function(file) {
+      df <- exportData3()
+      readr::write_csv(df, file)
+    }
+  )
+
   generate_graph <- function(threshold) {
     req(input$file1)
 
@@ -309,7 +368,7 @@ server <- function(input, output, session) {
 
     vis_data <- toVisNetworkData(graph)
 
-    return(visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Grafo Interactivo") %>%
+    return(visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Concept Lattice") %>%
              visIgraphLayout(layout = "layout_with_sugiyama") %>%
              visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
              visInteraction(hover = TRUE) %>%
@@ -369,12 +428,14 @@ server <- function(input, output, session) {
     shinyjs::hide("tabla4")
     shinyjs::hide("dropdown4")
     shinyjs::hide("selected_node_attributes")
+    shinyjs::hide("downloadData4")
   })
 
   observeEvent(input$saveButton4, {
     if (!is.null(calcular4())) {
       shinyjs::show("tabla4")
       shinyjs::show("dropdown4")
+      shinyjs::show("downloadData4")
     }
   })
 
@@ -403,6 +464,9 @@ server <- function(input, output, session) {
       final_result[is.na(final_result)] <- 0
 
     }
+
+    exportData4(final_result)
+
     return(final_result)
   })
 
@@ -417,4 +481,20 @@ server <- function(input, output, session) {
       )
     }
   })
+
+  output$downloadButtonUI4 <- renderUI({
+    if (!is.null(exportData4())) {
+      downloadButton("downloadData4", "Download CSV")
+    }
+  })
+
+  output$downloadData4 <- downloadHandler(
+    filename = function() {
+      paste("recomendacionGraph.csv", sep = "")
+    },
+    content = function(file) {
+      df <- exportData4()
+      readr::write_csv(df, file)
+    }
+  )
 }

@@ -1,6 +1,28 @@
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  titlePanel("RECOMMENDATION SYSTEM BASED ON FORMAL CONCEPT ANALYSIS"),
+  theme = shinytheme("lumen"),  # Aplicar un tema de Shiny
+  tags$head(
+    tags$style(HTML("
+      .tab-content {
+        padding: 20px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      .custom-title {
+        font-family: 'Roboto', sans-serif;  # Aplicar la fuente Roboto
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+        color: #333333;
+        text-shadow: 2px 2px 4px #aaaaaa;  # Añadir contorno
+        margin-bottom: 20px;
+      }
+    "))
+  ),
+
+  titlePanel(title = div(class = "custom-title", "RECOMMENDATION SYSTEM BASED ON FORMAL CONCEPT ANALYSIS")),
+
 
   tabsetPanel(
     tabPanel("Tab 1: Data import",
@@ -16,11 +38,11 @@ ui <- fluidPage(
                                accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
                    ),
                    column(
-                     width = 1,
+                     width = 2,
                      checkboxInput("header1", "Header", TRUE)
                    ),
                    column(
-                     width = 1,
+                     width = 3,
                      radioButtons("sep1", "Delimiter",
                                   choices = c(Comma = ",",
                                               Semicolon = ";",
@@ -28,7 +50,7 @@ ui <- fluidPage(
                                   selected = ",")
                    ),
                    column(
-                     width = 1,
+                     width = 3,
                      radioButtons("quote1", "Quote",
                                   choices = c(Nothing = "",
                                               Doble = '"',
@@ -58,7 +80,7 @@ ui <- fluidPage(
                column(
                  width = 12,
                  align = "center",
-                 actionButton("saveButton1", "Calculate")
+                 actionButton("saveButton1", "Calculate", class = "btn-primary")
                )
              ),
              fluidRow(
@@ -72,6 +94,13 @@ ui <- fluidPage(
                column(
                  width = 12,
                  DT::dataTableOutput("tabla1")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("downloadButtonUI1")
                )
              )
     ),
@@ -99,21 +128,28 @@ ui <- fluidPage(
              fluidRow(
                column(
                  width = 12,
-                 align = "center",  # Centrar el contenido
-                 actionButton("saveButton2", "Calculate")
+                 align = "center",
+                 actionButton("saveButton2", "Calculate", class = "btn-primary")
                )
              ),
              fluidRow(
                column(
                  width = 12,
                  align = "center",
-                 uiOutput("dropdown2")  # Esta salida se actualizará dinámicamente
+                 uiOutput("dropdown2")
                )
              ),
              fluidRow(
                column(
                  width = 12,
                  DT::dataTableOutput("tabla2")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("downloadButtonUI2")
                )
              )
     ),
@@ -142,7 +178,7 @@ ui <- fluidPage(
                column(
                  width = 12,
                  align = "center",
-                 actionButton("saveButton3", "Calculate")
+                 actionButton("saveButton3", "Calculate", class = "btn-primary")
                )
              ),
              fluidRow(
@@ -165,6 +201,13 @@ ui <- fluidPage(
                  width = 12,
                  align = "center",
                  uiOutput("historic3")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("downloadButtonUI3")
                )
              )
     ),
@@ -204,6 +247,13 @@ ui <- fluidPage(
                column(
                  width = 12,
                  DT::dataTableOutput("tabla4")
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 uiOutput("downloadButtonUI4")
                )
              )
     )

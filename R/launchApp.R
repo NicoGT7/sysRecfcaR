@@ -4,6 +4,7 @@
 #' @import shiny
 #' @import shinyWidgets
 #' @importFrom shinyjs useShinyjs hide show
+#' @importFrom shinythemes shinytheme
 #' @import dplyr
 #' @import magrittr
 #' @import fcaR
@@ -18,6 +19,8 @@
 #' library(fcaR)
 #' library(shiny)
 #' library(shinyWidgets)
+#' library(shinyjs)
+#' library(shinythemes)
 #' library(igraph)
 #' library(visNetwork)
 #' launchApp()
