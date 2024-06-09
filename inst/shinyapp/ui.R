@@ -19,6 +19,23 @@ ui <- fluidPage(
         margin-bottom: 20px;
         margin-top: 20px;
       }
+      .help-button {
+        background-color: #158cba;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        text-align: center;
+        line-height: 30px;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 5px;
+      }
+      .help-button:hover {
+        background-color: #0056b3;
+      }
     "))
   ),
 
@@ -37,13 +54,18 @@ ui <- fluidPage(
                        div(style = "margin: 0 auto; display: inline-block;",
                            fluidRow(
                              column(
-                               width = 12,
+                               width = 11,
                                align = "center",
                                offset = 0,
                                div(style = "display: inline-block; width: 100%; max-width: 300px;",
                                    fileInput("file1", "Choose a CSV file (must be binary)",
                                              accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
                                )
+                             ),
+                             column(
+                               width = 1,
+                               align = "center",
+                               actionButton("help0", "?", class = "help-button")
                              )
                            ),
                            fluidRow(
@@ -81,7 +103,9 @@ ui <- fluidPage(
              )
     ),
     tabPanel("Tab 2: Recommend by Attributes",
-             h2("Recommend by Attributes"),
+             div(style = "text-align: center;",
+                 h2("Recommend by Attributes")
+             ),
              fluidRow(
                column(
                  width = 12,
@@ -93,6 +117,13 @@ ui <- fluidPage(
                    selected = NULL,
                    multiple = TRUE
                  )
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 actionButton("help1", "?", class = "help-button")
                )
              ),
              fluidRow(
@@ -124,7 +155,9 @@ ui <- fluidPage(
              )
     ),
     tabPanel("Tab 3: Recommend by Max Cardinality",
-             h2("Recommend by Max Cardinality"),
+             div(style = "text-align: center;",
+                 h2("Recommend by Max Cardinality")
+             ),
              fluidRow(
                column(
                  width = 6,
@@ -142,6 +175,13 @@ ui <- fluidPage(
                    selected = NULL,
                    multiple = TRUE
                  )
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 actionButton("help2", "?", class = "help-button")
                )
              ),
              fluidRow(
@@ -173,7 +213,9 @@ ui <- fluidPage(
              )
     ),
     tabPanel("Tab 4: Recommend through iterative conversation",
-             h2("Recommend through iterative conversation"),
+             div(style = "text-align: center;",
+                 h2("Recommend through iterative conversation")
+             ),
              fluidRow(
                column(
                  width = 6,
@@ -191,6 +233,13 @@ ui <- fluidPage(
                    selected = NULL,
                    multiple = TRUE
                  )
+               )
+             ),
+             fluidRow(
+               column(
+                 width = 12,
+                 align = "center",
+                 actionButton("help3", "?", class = "help-button")
                )
              ),
              fluidRow(
@@ -236,9 +285,14 @@ ui <- fluidPage(
                  width = 4,
                  fluidRow(
                    column(
-                     width = 12,
+                     width = 11,
                      sliderInput("threshold4", "Confidence threshold:",
                                  min = 0, max = 1, value = 0.8, step = 0.1)
+                   ),
+                   column(
+                     width = 1,
+                     align = "center",
+                     actionButton("help4", "?", class = "help-button")
                    )
                  )
                ),

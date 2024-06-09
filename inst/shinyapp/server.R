@@ -55,6 +55,17 @@ server <- function(input, output, session) {
 
   })
 
+  observeEvent(input$help0, {
+    showModal(modalDialog(
+      title = "Help Data Import",
+      "In this window, you must upload a CSV file so that various techniques
+      can be applied to the dataset, and different strategies
+      of the recommender system can be utilized.",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+
   calcular1 <- eventReactive(input$saveButton1, {
     req(input$saveButton1)
     selected <- input$selectedAttributes1
@@ -116,6 +127,20 @@ server <- function(input, output, session) {
       )
   })
 
+  observeEvent(input$help1, {
+    showModal(modalDialog(
+      title = "Help Recommend by Attributes",
+      "In this window, a strategy based on attributes will be implemented.
+      Therefore, a direct search within the lattice will be conducted to obtain
+      the most reliable subconcept that contains both the selected attributes
+      and the desired attributes.
+      Each row of the resulting table will be the best possible recommendation
+      for the desired attribute; that is, each recommendation is individual",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+
   output$dropdown1 <- renderUI({
     if (!is.null(calcular1())) {
       pickerInput(
@@ -136,7 +161,7 @@ server <- function(input, output, session) {
 
   output$downloadData1 <- downloadHandler(
     filename = function() {
-      paste("recommendationAttr.csv", sep = "")
+      paste("recomendacionAttr.csv", sep = "")
     },
     content = function(file) {
       df <- exportData1()
@@ -182,6 +207,19 @@ server <- function(input, output, session) {
     return(result)
   })
 
+  observeEvent(input$help2, {
+    showModal(modalDialog(
+      title = "Help Recommend by Max Cardinality",
+      "In this window, a strategy based on max cardinality will be implemented.
+      A minimum confidence threshold and the attributes that must be included
+      in the recommendation should be selected. The result will be a table
+      with all the recommendations that meet both criteria, ordered by the
+      number of attributes the concept possesses.",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+
   output$tabla2 <- DT::renderDataTable({
     final_result <- calcular2()
     DT::datatable(final_result,
@@ -205,7 +243,7 @@ server <- function(input, output, session) {
 
   output$downloadData2 <- downloadHandler(
     filename = function() {
-      paste("recommendationMC.csv", sep = "")
+      paste("recomendacionMC.csv", sep = "")
     },
     content = function(file) {
       df <- exportData2()
@@ -310,6 +348,20 @@ server <- function(input, output, session) {
     return(result)
   })
 
+  observeEvent(input$help3, {
+    showModal(modalDialog(
+      title = "Help Recommend through iterative conversation",
+      "In this window, a strategy based on an iterative conversation with the user
+      will be implemented.
+      It follows the same idea as the strategy based on maximum cardinality,
+      but for each resulting table, the user will be able to choose one of the
+      rows and the process will be repeated until the desired recommendation
+      is reached.",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+
   output$tabla3 <- DT::renderDataTable({
     DT::datatable(ultimaTabla(),
                   options = list(
@@ -321,6 +373,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$saveButton3, {
+    req(input$saveButton3)
     output$tabla3 <- DT::renderDataTable({
       DT::datatable(calcular3(),
                     options = list(
@@ -374,13 +427,30 @@ server <- function(input, output, session) {
   output$historic3 <- renderUI({
     if (!is.null(historicIdx())) {
       tags$div(
+        style = 'border: 2px solid #158cba; padding: 10px; border-radius: 5px; background-color: #f9f9f9; max-width: 600px; margin: 0 auto;',
         h4("History (Attributes, Confidence):"),
-        HTML(paste0("<ul style='list-style-type: none;'>",
-                    sapply(historicIdx(), function(tupla) {
-                      paste0("<li>Attributes: ", paste(tupla[[1]], collapse = ", "), ", Confidence: ", tupla[[2]], "</li>")
-                    }),
-                    "</ul>"))
+        HTML(
+          paste0(
+            "<ul style='list-style-type: none; padding-left: 0;'>",
+            paste0(
+              sapply(historicIdx(), function(tupla) {
+                paste0(
+                  "<li style='margin-bottom: 5px;'>",
+                  "<span style='font-weight: bold;'>Attributes:</span> ",
+                  paste(tupla[[1]], collapse = ", "),
+                  ", <span style='font-weight: bold;'>Confidence:</span> ",
+                  tupla[[2]],
+                  "</li>"
+                )
+              }),
+              collapse = ""
+            ),
+            "</ul>"
+          )
+        )
       )
+
+
     }
   })
 
@@ -392,7 +462,7 @@ server <- function(input, output, session) {
 
   output$downloadData3 <- downloadHandler(
     filename = function() {
-      paste("recommendationInt.csv", sep = "")
+      paste("recomendacionInt.csv", sep = "")
     },
     content = function(file) {
       df <- exportData3()
@@ -467,6 +537,19 @@ server <- function(input, output, session) {
     dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
 
     return(dfSubconceptos)
+  })
+
+  observeEvent(input$help4, {
+    showModal(modalDialog(
+      title = "Help Interactive Graph",
+      "In this window, a strategy based on an interactive graph will be implemented.
+      A minimum confidence threshold should be selected, and the sublattice
+      of concepts that meet this restriction will be displayed, allowing the
+      user to explore freely. Once a node is selected, the attribute-based
+      recommendation can be activated",
+      easyClose = TRUE,
+      footer = NULL
+    ))
   })
 
   observeEvent(input$threshold4, {
@@ -551,7 +634,7 @@ server <- function(input, output, session) {
 
   output$downloadData4 <- downloadHandler(
     filename = function() {
-      paste("recommendationGraph.csv", sep = "")
+      paste("recomendacionGraph.csv", sep = "")
     },
     content = function(file) {
       df <- exportData4()
