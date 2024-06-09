@@ -17,7 +17,8 @@ Imports:
     shinythemes,
     readr,
     igraph,
-    visNetwork
+    visNetwork,
+    DT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1

@@ -1,6 +1,6 @@
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  theme = shinytheme("lumen"),  # Aplicar un tema de Shiny
+  theme = shinytheme("lumen"),
   tags$head(
     tags$style(HTML("
       .tab-content {
@@ -10,13 +10,14 @@ ui <- fluidPage(
         margin-top: 0;
       }
       .custom-title {
-        font-family: 'Roboto', sans-serif;  # Aplicar la fuente Roboto
-        font-size: 28px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 30px;
         font-weight: bold;
         text-align: center;
-        color: #333333;
-        text-shadow: 2px 2px 4px #aaaaaa;  # Añadir contorno
+        color: #158cba;
+        text-shadow: 2px 2px 4px #d9edf7;
         margin-bottom: 20px;
+        margin-top: 20px;
       }
     "))
   ),
@@ -26,39 +27,57 @@ ui <- fluidPage(
 
   tabsetPanel(
     tabPanel("Tab 1: Data import",
-             h2("Upload file"),
-             fluidRow(
-               column(
-                 width = 12,
-                 align = "left",
+             div(style = "text-align: center;",
+                 h2("Upload file"),
                  fluidRow(
                    column(
-                     width = 3,
-                     fileInput("file1", "Choose a CSV file (must be binary)",
-                               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
-                   ),
-                   column(
-                     width = 2,
-                     checkboxInput("header1", "Header", TRUE)
-                   ),
-                   column(
-                     width = 3,
-                     radioButtons("sep1", "Delimiter",
-                                  choices = c(Comma = ",",
-                                              Semicolon = ";",
-                                              Tab = "\t"),
-                                  selected = ",")
-                   ),
-                   column(
-                     width = 3,
-                     radioButtons("quote1", "Quote",
-                                  choices = c(Nothing = "",
-                                              Doble = '"',
-                                              Simple = "'"),
-                                  selected = '"')
+                     width = 12,
+                     align = "center",
+                     wellPanel(
+                       div(style = "margin: 0 auto; display: inline-block;",
+                           fluidRow(
+                             column(
+                               width = 12,
+                               align = "center",
+                               offset = 0,
+                               div(style = "display: inline-block; width: 100%; max-width: 300px;",
+                                   fileInput("file1", "Choose a CSV file (must be binary)",
+                                             accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
+                               )
+                             )
+                           ),
+                           fluidRow(
+                             column(
+                               width = 4,
+                               align = "center",
+                               offset = 0,
+                               checkboxInput("header1", "Header", TRUE)
+                             ),
+                             column(
+                               width = 4,
+                               align = "center",
+                               offset = 0,
+                               radioButtons("sep1", "Delimiter",
+                                            choices = c(Comma = ",",
+                                                        Semicolon = ";",
+                                                        Tab = "\t"),
+                                            selected = ";")
+                             ),
+                             column(
+                               width = 4,
+                               offset = 0,
+                               align = "center",
+                               radioButtons("quote1", "Quote",
+                                            choices = c(Nothing = "",
+                                                        Double = '"',
+                                                        Single = "'"),
+                                            selected = '')
+                             )
+                           )
+                       )
+                     )
                    )
                  )
-               )
              )
     ),
     tabPanel("Tab 2: Recommend by Attributes",

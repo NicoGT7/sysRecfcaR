@@ -103,7 +103,17 @@ server <- function(input, output, session) {
 
     exportData1(final_result)
 
-    return(final_result)
+    DT::datatable(final_result,
+                  options = list(
+                    pageLength = 10,
+                    autoWidth = TRUE,
+                    dom = 'ftipr',
+                    class = 'stripe compact hover row-border'
+                  ), style = 'bootstrap4') %>%
+      DT::formatStyle(
+        columns = input$selectedAttributes1,
+        backgroundColor = '#cce5ff'
+      )
   })
 
   output$dropdown1 <- renderUI({
@@ -126,7 +136,7 @@ server <- function(input, output, session) {
 
   output$downloadData1 <- downloadHandler(
     filename = function() {
-      paste("recomendacionAttr.csv", sep = "")
+      paste("recommendationAttr.csv", sep = "")
     },
     content = function(file) {
       df <- exportData1()
@@ -173,7 +183,18 @@ server <- function(input, output, session) {
   })
 
   output$tabla2 <- DT::renderDataTable({
-    calcular2()
+    final_result <- calcular2()
+    DT::datatable(final_result,
+                  options = list(
+                    pageLength = 10,
+                    autoWidth = TRUE,
+                    dom = 'ftipr',
+                    class = 'stripe compact hover row-border'
+                  ), style = 'bootstrap4') %>%
+      DT::formatStyle(
+        columns = input$selectedAttributes2,
+        backgroundColor = '#cce5ff'
+      )
   })
 
   output$downloadButtonUI2 <- renderUI({
@@ -184,7 +205,7 @@ server <- function(input, output, session) {
 
   output$downloadData2 <- downloadHandler(
     filename = function() {
-      paste("recomendacionMC.csv", sep = "")
+      paste("recommendationMC.csv", sep = "")
     },
     content = function(file) {
       df <- exportData2()
@@ -290,12 +311,28 @@ server <- function(input, output, session) {
   })
 
   output$tabla3 <- DT::renderDataTable({
-    DT::datatable(ultimaTabla(), selection = 'single')
+    DT::datatable(ultimaTabla(),
+                  options = list(
+                    pageLength = 10,
+                    autoWidth = TRUE,
+                    dom = 'ftipr',
+                    class = 'stripe compact hover row-border'
+                  ), style = 'bootstrap4', selection = 'single')
   })
 
   observeEvent(input$saveButton3, {
     output$tabla3 <- DT::renderDataTable({
-      DT::datatable(calcular3(), selection = 'single')
+      DT::datatable(calcular3(),
+                    options = list(
+                      pageLength = 10,
+                      autoWidth = TRUE,
+                      dom = 'ftipr',
+                      class = 'stripe compact hover row-border'
+                    ), style = 'bootstrap4', selection = 'single') %>%
+        DT::formatStyle(
+          columns = input$selectedAttributes3,
+          backgroundColor = '#cce5ff'
+        )
     })
   })
 
@@ -314,7 +351,17 @@ server <- function(input, output, session) {
 
   observeEvent(input$validateButton3, {
     output$tabla3 <- DT::renderDataTable({
-      recalcular3()
+      DT::datatable(recalcular3(),
+                    options = list(
+                      pageLength = 10,
+                      autoWidth = TRUE,
+                      dom = 'ftipr',
+                      class = 'stripe compact hover row-border'
+                    ), style = 'bootstrap4', selection = 'single') %>%
+        DT::formatStyle(
+          columns = input$selectedAttributes3,
+          backgroundColor = '#cce5ff'
+        )
     })
   })
 
@@ -345,7 +392,7 @@ server <- function(input, output, session) {
 
   output$downloadData3 <- downloadHandler(
     filename = function() {
-      paste("recomendacionInt.csv", sep = "")
+      paste("recommendationInt.csv", sep = "")
     },
     content = function(file) {
       df <- exportData3()
@@ -467,7 +514,21 @@ server <- function(input, output, session) {
 
     exportData4(final_result)
 
-    return(final_result)
+    sublattice2 <- sublattice()
+    idxNode2 <- idxNode()
+    selected <- getAttributes(sublattice2, idxNode2)
+
+    DT::datatable(final_result,
+                  options = list(
+                    pageLength = 10,
+                    autoWidth = TRUE,
+                    dom = 'ftipr',
+                    class = 'stripe compact hover row-border'
+                  ), style = 'bootstrap4') %>%
+      DT::formatStyle(
+        columns = selected,
+        backgroundColor = '#cce5ff'
+      )
   })
 
   output$dropdown4 <- renderUI({
@@ -490,7 +551,7 @@ server <- function(input, output, session) {
 
   output$downloadData4 <- downloadHandler(
     filename = function() {
-      paste("recomendacionGraph.csv", sep = "")
+      paste("recommendationGraph.csv", sep = "")
     },
     content = function(file) {
       df <- exportData4()
