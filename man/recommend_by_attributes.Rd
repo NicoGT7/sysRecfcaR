@@ -17,7 +17,9 @@ recommend_by_attributes(fc, selectedAttributes, probAttributes)
 a data frame with the best possible recommendation for each attribute to check
 }
 \description{
-Recommendation Based on the Best Confidence Match for One or Multiple Attributes
+This method applies closure to the selected attributes in order to
+perform a search in the concept lattice and retain the best possible
+subconcept that contains the desired attribute.
 }
 \examples{
 library(fcaR)

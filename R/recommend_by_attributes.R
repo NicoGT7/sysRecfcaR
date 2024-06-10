@@ -1,5 +1,10 @@
 #' Recommendation Based on the Best Confidence Match for One or Multiple Attributes
 #'
+#' @description
+#' This method applies closure to the selected attributes in order to
+#' perform a search in the concept lattice and retain the best possible
+#' subconcept that contains the desired attribute.
+#'
 #' @param fc a FormalContext using fcaR
 #' @param selectedAttributes the desired attributes
 #' @param probAttributes the attributes to check

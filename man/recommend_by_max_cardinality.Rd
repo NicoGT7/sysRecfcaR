@@ -17,7 +17,10 @@ recommend_by_max_cardinality(fc, selectedAttributes, conf_value)
 a data frame with the best recommendations sorted by the number of attributes the concept possesses
 }
 \description{
-Recommendation Based on Maximum Cardinality with Minimum Confidence
+This method applies closure to the selected attributes to perform
+a search in the concept lattice and retain the subconcepts that
+exceed the confidence threshold. The resulting table will be
+sorted by the number of attributes each concept possesses.
 }
 \examples{
 library(fcaR)

@@ -1,5 +1,11 @@
 #' Recommendation Based on Maximum Cardinality with Minimum Confidence
 #'
+#' @description
+#' This method applies closure to the selected attributes to perform
+#' a search in the concept lattice and retain the subconcepts that
+#' exceed the confidence threshold. The resulting table will be
+#' sorted by the number of attributes each concept possesses.
+#'
 #' @param fc a FormalContext using fcaR
 #' @param selectedAttributes the desired attributes
 #' @param conf_value a value between 0 and 1 to filter concepts by that confidence
