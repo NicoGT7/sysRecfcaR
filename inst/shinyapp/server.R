@@ -17,6 +17,9 @@ server <- function(input, output, session) {
   exportData3 <- reactiveVal(NULL)
   exportData4 <- reactiveVal(NULL)
 
+  mostrar2 <- reactiveVal(FALSE)
+
+
   observeEvent(input$file1, {
     req(input$file1)
 
@@ -66,6 +69,10 @@ server <- function(input, output, session) {
     ))
   })
 
+  observeEvent(input$selectedAttributes1, {
+    updatePickerInput(session, "atributosProb1", choices = attributes(), selected = NULL)
+  })
+
   calcular1 <- eventReactive(input$saveButton1, {
     req(input$saveButton1)
     selected <- input$selectedAttributes1
@@ -87,6 +94,7 @@ server <- function(input, output, session) {
   })
 
   output$tabla1 <- DT::renderDataTable({
+    req(input$saveButton1)
     req(input$atributosProb1)
 
     columna <- input$atributosProb1
@@ -161,7 +169,7 @@ server <- function(input, output, session) {
 
   output$downloadData1 <- downloadHandler(
     filename = function() {
-      paste("recomendacionAttr.csv", sep = "")
+      paste("recommendationAttr.csv", sep = "")
     },
     content = function(file) {
       df <- exportData1()
@@ -220,7 +228,16 @@ server <- function(input, output, session) {
     ))
   })
 
+  observeEvent(input$saveButton2, {
+    mostrar2(TRUE)
+  })
+
+  observeEvent(input$selectedAttributes2, {
+    mostrar2(FALSE)
+  })
+
   output$tabla2 <- DT::renderDataTable({
+    req(mostrar2())
     final_result <- calcular2()
     DT::datatable(final_result,
                   options = list(
@@ -243,7 +260,7 @@ server <- function(input, output, session) {
 
   output$downloadData2 <- downloadHandler(
     filename = function() {
-      paste("recomendacionMC.csv", sep = "")
+      paste("recommendationMC.csv", sep = "")
     },
     content = function(file) {
       df <- exportData2()
@@ -462,7 +479,7 @@ server <- function(input, output, session) {
 
   output$downloadData3 <- downloadHandler(
     filename = function() {
-      paste("recomendacionInt.csv", sep = "")
+      paste("recommendationInt.csv", sep = "")
     },
     content = function(file) {
       df <- exportData3()
@@ -505,6 +522,8 @@ server <- function(input, output, session) {
       shinyjs::show("selected_node_attributes")
       sublattice2 <- sublattice()
       attributes <- getAttributes(sublattice2, as.numeric(selected_node))
+
+      updatePickerInput(session, "atributosProb4", choices = attributes(), selected = NULL)
 
       output$selected_node_attributes <- renderPrint({
         cat("Attributes of the selected node:\n")
@@ -634,7 +653,7 @@ server <- function(input, output, session) {
 
   output$downloadData4 <- downloadHandler(
     filename = function() {
-      paste("recomendacionGraph.csv", sep = "")
+      paste("recommendationGraph.csv", sep = "")
     },
     content = function(file) {
       df <- exportData4()
