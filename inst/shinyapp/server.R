@@ -18,6 +18,7 @@ server <- function(input, output, session) {
   exportData4 <- reactiveVal(NULL)
 
   mostrar2 <- reactiveVal(FALSE)
+  colvalues <- reactiveVal(NULL)
 
 
   observeEvent(input$file1, {
@@ -272,6 +273,8 @@ server <- function(input, output, session) {
     req(input$saveButton3)
     selected <- input$selectedAttributes3
 
+    colvalues(selected)
+
     fc2 <- fc()
     concepts2 <- concepts()
     attributes2 <- attributes()
@@ -333,6 +336,8 @@ server <- function(input, output, session) {
 
     updatePickerInput(session, "selectedAttributes3", choices = attributes(),
                       selected = getAttributes(concepts2, idxConcept))
+
+    colvalues(getAttributes(concepts2, idxConcept))
 
     dfSubconceptos <- as.data.frame(getSupportSub(concepts2, idxConcept))
 
@@ -400,7 +405,7 @@ server <- function(input, output, session) {
                       class = 'stripe compact hover row-border'
                     ), style = 'bootstrap4', selection = 'single') %>%
         DT::formatStyle(
-          columns = input$selectedAttributes3,
+          columns = colvalues(),
           backgroundColor = '#cce5ff'
         )
     })
@@ -429,7 +434,7 @@ server <- function(input, output, session) {
                       class = 'stripe compact hover row-border'
                     ), style = 'bootstrap4', selection = 'single') %>%
         DT::formatStyle(
-          columns = input$selectedAttributes3,
+          columns = colvalues(),
           backgroundColor = '#cce5ff'
         )
     })
