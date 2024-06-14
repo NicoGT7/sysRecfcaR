@@ -2,10 +2,10 @@
 #'
 #' @return This function does not return anything. It initiates a Shiny app
 #' @import shiny
-#' @import shinyWidgets
+#' @importFrom shinyWidgets pickerInput updatePickerInput
 #' @importFrom shinyjs useShinyjs hide show
 #' @importFrom shinythemes shinytheme
-#' @import dplyr
+#' @importFrom dplyr filter bind_rows
 #' @import magrittr
 #' @import fcaR
 #' @importFrom igraph graph add_vertices add_edges simplify as.undirected
@@ -14,15 +14,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(dplyr)
-#' library(magrittr)
-#' library(fcaR)
-#' library(shiny)
-#' library(shinyWidgets)
-#' library(shinyjs)
-#' library(shinythemes)
-#' library(igraph)
-#' library(visNetwork)
 #' launchApp()
 #' }
 launchApp <- function(){

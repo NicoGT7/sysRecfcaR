@@ -39,7 +39,7 @@ server <- function(input, output, session) {
 
     data_matrix <- file_csv()
 
-    fc2 <- FormalContext$new(data_matrix)
+    fc2 <- fcaR::FormalContext$new(data_matrix)
 
     fc(fc2)
 
@@ -53,9 +53,9 @@ server <- function(input, output, session) {
 
     attributes(attributes2)
 
-    updatePickerInput(session, "selectedAttributes1", choices = attributes())
-    updatePickerInput(session, "selectedAttributes2", choices = attributes())
-    updatePickerInput(session, "selectedAttributes3", choices = attributes())
+    shinyWidgets::updatePickerInput(session, "selectedAttributes1", choices = attributes())
+    shinyWidgets::updatePickerInput(session, "selectedAttributes2", choices = attributes())
+    shinyWidgets::updatePickerInput(session, "selectedAttributes3", choices = attributes())
 
   })
 
@@ -71,7 +71,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$selectedAttributes1, {
-    updatePickerInput(session, "atributosProb1", choices = attributes(), selected = NULL)
+    shinyWidgets::updatePickerInput(session, "atributosProb1", choices = attributes(), selected = NULL)
   })
 
   calcular1 <- eventReactive(input$saveButton1, {
@@ -80,16 +80,16 @@ server <- function(input, output, session) {
 
     fc2 <- fc()
 
-    set_attributes <- Set$new(fc2$attributes)
+    set_attributes <- fcaR::Set$new(fc2$attributes)
     set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
 
     s <- fc2$closure(set_attributes)
 
     concepts2 <- concepts()
 
-    idxConcept <- getIdx(concepts2, s)
+    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
 
-    dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
+    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
 
     return(dfSubconceptos)
   })
@@ -104,7 +104,7 @@ server <- function(input, output, session) {
 
     for (i in 1:length(columna)) {
 
-      res <- calcular1() %>% filter(.data[[columna[i]]] == 1)
+      res <- calcular1() %>% dplyr::filter(.data[[columna[i]]] == 1)
 
       result <- res[1,1:2]
 
@@ -116,7 +116,7 @@ server <- function(input, output, session) {
         }
       }
 
-      final_result <- bind_rows(final_result, result)
+      final_result <- dplyr::bind_rows(final_result, result)
       final_result[is.na(final_result)] <- 0
 
     }
@@ -152,7 +152,7 @@ server <- function(input, output, session) {
 
   output$dropdown1 <- renderUI({
     if (!is.null(calcular1())) {
-      pickerInput(
+      shinyWidgets::pickerInput(
         inputId = "atributosProb1",
         label = div("Select the attributes to calculate probability:", class = "text-center"),
         choices = attributes(),
@@ -184,16 +184,16 @@ server <- function(input, output, session) {
 
     fc2 <- fc()
 
-    set_attributes <- Set$new(fc2$attributes)
+    set_attributes <- fcaR::Set$new(fc2$attributes)
     set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
 
     s <- fc2$closure(set_attributes)
 
     concepts2 <- concepts()
 
-    idxConcept <- getIdx(concepts2, s)
+    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
 
-    dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
+    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
 
     dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold2, ]
 
@@ -279,14 +279,14 @@ server <- function(input, output, session) {
     concepts2 <- concepts()
     attributes2 <- attributes()
 
-    set_attributes <- Set$new(attributes2)
+    set_attributes <- fcaR::Set$new(attributes2)
     set_attributes$assign(attributes = selected, values = rep(1, length(selected)))
 
     s <- fc2$closure(set_attributes)
 
-    idxConcept <- getIdx(concepts2, s)
+    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
 
-    dfSubconceptos <- as.data.frame(getSupportSub(concepts2, idxConcept))
+    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2, idxConcept))
 
     dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold3, ]
 
@@ -334,12 +334,12 @@ server <- function(input, output, session) {
     concepts2 <- concepts()
     attributes2 <- attributes()
 
-    updatePickerInput(session, "selectedAttributes3", choices = attributes(),
-                      selected = getAttributes(concepts2, idxConcept))
+    shinyWidgets::updatePickerInput(session, "selectedAttributes3", choices = attributes(),
+                                    selected = sysRecfcaR::getAttributes(concepts2, idxConcept))
 
-    colvalues(getAttributes(concepts2, idxConcept))
+    colvalues(sysRecfcaR::getAttributes(concepts2, idxConcept))
 
-    dfSubconceptos <- as.data.frame(getSupportSub(concepts2, idxConcept))
+    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2, idxConcept))
 
     dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold3, ]
 
@@ -503,21 +503,21 @@ server <- function(input, output, session) {
 
     sublattice(sublattice2)
 
-    graph <- graph_sublattice(sublattice2)
+    graph <- sysRecfcaR::graph_sublattice(sublattice2)
 
-    vis_data <- toVisNetworkData(graph)
+    vis_data <- visNetwork::toVisNetworkData(graph)
 
-    return(visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Concept Lattice") %>%
-             visIgraphLayout(layout = "layout_with_sugiyama") %>%
-             visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
-             visInteraction(hover = TRUE) %>%
-             visEvents(click = "function(properties) {
+    return(visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Concept Lattice") %>%
+             visNetwork::visIgraphLayout(layout = "layout_with_sugiyama") %>%
+             visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+             visNetwork::visInteraction(hover = TRUE) %>%
+             visNetwork::visEvents(click = "function(properties) {
                var nodeId = properties.nodes[0];
                Shiny.setInputValue('selected_node_id', nodeId);
              }"))
   }
 
-  output$network <- renderVisNetwork({
+  output$network <- visNetwork::renderVisNetwork({
     generate_graph(input$threshold4)
   })
 
@@ -526,9 +526,9 @@ server <- function(input, output, session) {
     if (!is.null(selected_node)) {
       shinyjs::show("selected_node_attributes")
       sublattice2 <- sublattice()
-      attributes <- getAttributes(sublattice2, as.numeric(selected_node))
+      attributes <- sysRecfcaR::getAttributes(sublattice2, as.numeric(selected_node))
 
-      updatePickerInput(session, "atributosProb4", choices = attributes(), selected = NULL)
+      shinyWidgets::updatePickerInput(session, "atributosProb4", choices = attributes(), selected = NULL)
 
       output$selected_node_attributes <- renderPrint({
         cat("Attributes of the selected node:\n")
@@ -545,20 +545,20 @@ server <- function(input, output, session) {
     req(input$saveButton4)
     sublattice2 <- sublattice()
     idxNode2 <- idxNode()
-    selected <- getAttributes(sublattice2, idxNode2)
+    selected <- sysRecfcaR::getAttributes(sublattice2, idxNode2)
 
     fc2 <- fc()
 
-    set_attributes <- Set$new(fc2$attributes)
+    set_attributes <- fcaR::Set$new(fc2$attributes)
     set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
 
     s <- fc2$closure(set_attributes)
 
     concepts2 <- concepts()
 
-    idxConcept <- getIdx(concepts2, s)
+    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
 
-    dfSubconceptos <- as.data.frame(getSupportSub(concepts2,idxConcept))
+    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
 
     return(dfSubconceptos)
   })
@@ -577,7 +577,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$threshold4, {
-    updatePickerInput(session, "atributosProb4", choices = attributes())
+    shinyWidgets::updatePickerInput(session, "atributosProb4", choices = attributes())
     shinyjs::hide("saveButton4")
     shinyjs::hide("tabla4")
     shinyjs::hide("dropdown4")
@@ -602,7 +602,7 @@ server <- function(input, output, session) {
 
     for (i in 1:length(columna)) {
 
-      res <- calcular4() %>% filter(.data[[columna[i]]] == 1)
+      res <- calcular4() %>% dplyr::filter(.data[[columna[i]]] == 1)
 
       result <- res[1,1:2]
 
@@ -614,7 +614,7 @@ server <- function(input, output, session) {
         }
       }
 
-      final_result <- bind_rows(final_result, result)
+      final_result <- dplyr::bind_rows(final_result, result)
       final_result[is.na(final_result)] <- 0
 
     }
@@ -623,7 +623,7 @@ server <- function(input, output, session) {
 
     sublattice2 <- sublattice()
     idxNode2 <- idxNode()
-    selected <- getAttributes(sublattice2, idxNode2)
+    selected <- sysRecfcaR::getAttributes(sublattice2, idxNode2)
 
     DT::datatable(final_result,
                   options = list(
@@ -640,7 +640,7 @@ server <- function(input, output, session) {
 
   output$dropdown4 <- renderUI({
     if (!is.null(calcular4())) {
-      pickerInput(
+      shinyWidgets::pickerInput(
         inputId = "atributosProb4",
         label = div("Select the attributes to calculate probability:", class = "text-center"),
         choices = attributes(),

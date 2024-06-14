@@ -1,6 +1,6 @@
 ui <- fluidPage(
   shinyjs::useShinyjs(),
-  theme = shinytheme("lumen"),
+  theme = shinythemes::shinytheme("lumen"),
   tags$head(
     tags$style(HTML("
       .tab-content {
@@ -110,7 +110,7 @@ ui <- fluidPage(
                column(
                  width = 12,
                  align = "center",
-                 pickerInput(
+                 shinyWidgets::pickerInput(
                    inputId = "selectedAttributes1",
                    label = div("Select the attributes:", class = "text-center"),
                    choices = NULL,
@@ -168,7 +168,7 @@ ui <- fluidPage(
                column(
                  width = 6,
                  align = "left",
-                 pickerInput(
+                 shinyWidgets::pickerInput(
                    inputId = "selectedAttributes2",
                    label = div("Select the attributes:", class = "text-center"),
                    choices = NULL,
@@ -226,7 +226,7 @@ ui <- fluidPage(
                column(
                  width = 6,
                  align = "left",
-                 pickerInput(
+                 shinyWidgets::pickerInput(
                    inputId = "selectedAttributes3",
                    label = div("Select the attributes:", class = "text-center"),
                    choices = NULL,
@@ -298,7 +298,7 @@ ui <- fluidPage(
                ),
                column(
                  width = 8,
-                 visNetworkOutput("network"),
+                 visNetwork::visNetworkOutput("network"),
                  verbatimTextOutput("selected_node_attributes")
                )
              ),

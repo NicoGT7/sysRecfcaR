@@ -14,15 +14,6 @@ Shiny Application
 }
 \examples{
 \dontrun{
-library(dplyr)
-library(magrittr)
-library(fcaR)
-library(shiny)
-library(shinyWidgets)
-library(shinyjs)
-library(shinythemes)
-library(igraph)
-library(visNetwork)
 launchApp()
 }
 }
