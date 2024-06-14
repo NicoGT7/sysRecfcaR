@@ -102,6 +102,8 @@ server <- function(input, output, session) {
 
     final_result <- data.frame()
 
+    `%>%` <- magrittr::`%>%`
+
     for (i in 1:length(columna)) {
 
       res <- calcular1() %>% dplyr::filter(.data[[columna[i]]] == 1)
@@ -239,6 +241,7 @@ server <- function(input, output, session) {
 
   output$tabla2 <- DT::renderDataTable({
     req(mostrar2())
+    `%>%` <- magrittr::`%>%`
     final_result <- calcular2()
     DT::datatable(final_result,
                   options = list(
@@ -397,6 +400,7 @@ server <- function(input, output, session) {
   observeEvent(input$saveButton3, {
     req(input$saveButton3)
     output$tabla3 <- DT::renderDataTable({
+      `%>%` <- magrittr::`%>%`
       DT::datatable(calcular3(),
                     options = list(
                       pageLength = 10,
@@ -426,6 +430,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$validateButton3, {
     output$tabla3 <- DT::renderDataTable({
+      `%>%` <- magrittr::`%>%`
       DT::datatable(recalcular3(),
                     options = list(
                       pageLength = 10,
@@ -506,6 +511,8 @@ server <- function(input, output, session) {
     graph <- sysRecfcaR::graph_sublattice(sublattice2)
 
     vis_data <- visNetwork::toVisNetworkData(graph)
+
+    `%>%` <- magrittr::`%>%`
 
     return(visNetwork::visNetwork(nodes = vis_data$nodes, edges = vis_data$edges, main = "Concept Lattice") %>%
              visNetwork::visIgraphLayout(layout = "layout_with_sugiyama") %>%
@@ -599,6 +606,8 @@ server <- function(input, output, session) {
     columna <- input$atributosProb4
 
     final_result <- data.frame()
+
+    `%>%` <- magrittr::`%>%`
 
     for (i in 1:length(columna)) {
 
