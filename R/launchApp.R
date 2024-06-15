@@ -5,6 +5,7 @@
 #' @importFrom shinyWidgets pickerInput updatePickerInput
 #' @importFrom shinyjs useShinyjs hide show
 #' @importFrom shinythemes shinytheme
+#' @importFrom shinyalert shinyalert
 #' @importFrom dplyr filter bind_rows
 #' @import magrittr
 #' @import fcaR

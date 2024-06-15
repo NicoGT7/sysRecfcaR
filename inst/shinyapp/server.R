@@ -33,29 +33,51 @@ server <- function(input, output, session) {
                      row.names = NULL,
                      check.names = FALSE)
 
+    if(input$col1){
+      rownames(data) <- data[,1]
+
+      data[,1] <- NULL
+    }
+
     data_matrix <- as.matrix(data)
 
     file_csv(data_matrix)
 
     data_matrix <- file_csv()
 
-    fc2 <- fcaR::FormalContext$new(data_matrix)
+    fc2 <- tryCatch({
+      fcaR::FormalContext$new(data_matrix)
+    }, error = function(e) {
+      shinyalert::shinyalert(title = "Error",
+                             type = "error",
+                             text = "Error creating the formal context. Please check your input data.")
+      return(NULL)
+    })
 
-    fc(fc2)
+    if (!is.null(fc2)) {
+      fc(fc2)
 
-    fc2$find_concepts()
+      tryCatch({
+        fc2$find_concepts()
+      }, error = function(e) {
+        shinyalert::shinyalert(title = "Error",
+                               type = "error",
+                               text = "Error: File must be binary. Please check your input data.")
+        return()
+      })
 
-    concepts2 <- fc2$concepts
+      if (!is.null(fc2$concepts)) {
+        concepts2 <- fc2$concepts
+        concepts(concepts2)
 
-    concepts(concepts2)
+        attributes2 <- fc2$attributes
+        attributes(attributes2)
 
-    attributes2 <- fc2$attributes
-
-    attributes(attributes2)
-
-    shinyWidgets::updatePickerInput(session, "selectedAttributes1", choices = attributes())
-    shinyWidgets::updatePickerInput(session, "selectedAttributes2", choices = attributes())
-    shinyWidgets::updatePickerInput(session, "selectedAttributes3", choices = attributes())
+        shinyWidgets::updatePickerInput(session, "selectedAttributes1", choices = attributes())
+        shinyWidgets::updatePickerInput(session, "selectedAttributes2", choices = attributes())
+        shinyWidgets::updatePickerInput(session, "selectedAttributes3", choices = attributes())
+      }
+    }
 
   })
 

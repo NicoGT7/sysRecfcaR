@@ -15,6 +15,7 @@ Imports:
     shinyWidgets,
     shinyjs,
     shinythemes,
+    shinyalert,
     readr,
     igraph,
     visNetwork,

@@ -70,13 +70,19 @@ ui <- fluidPage(
                            ),
                            fluidRow(
                              column(
-                               width = 4,
+                               width = 3,
                                align = "center",
                                offset = 0,
                                checkboxInput("header1", "Header", TRUE)
                              ),
                              column(
-                               width = 4,
+                               width = 3,
+                               align = "center",
+                               offset = 0,
+                               checkboxInput("col1", "¿Column names?", TRUE)
+                             ),
+                             column(
+                               width = 3,
                                align = "center",
                                offset = 0,
                                radioButtons("sep1", "Delimiter",
@@ -86,7 +92,7 @@ ui <- fluidPage(
                                             selected = ";")
                              ),
                              column(
-                               width = 4,
+                               width = 3,
                                offset = 0,
                                align = "center",
                                radioButtons("quote1", "Quote",
