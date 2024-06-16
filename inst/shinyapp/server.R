@@ -560,9 +560,14 @@ server <- function(input, output, session) {
              }"))
   }
 
-  output$network <- visNetwork::renderVisNetwork({
-    generate_graph(input$threshold4)
+  observeEvent(input$submitButton4, {
+    req(input$submitButton4)
+    threshold <- isolate(input$threshold4)
+    output$network <- visNetwork::renderVisNetwork({
+      generate_graph(threshold)
+    })
   })
+
 
   observeEvent(input$selected_node_id, {
     selected_node <- input$selected_node_id
@@ -610,7 +615,7 @@ server <- function(input, output, session) {
     showModal(modalDialog(
       title = "Help Interactive Graph",
       "In this window, a strategy based on an interactive graph will be implemented.
-      A minimum confidence threshold should be selected, and the sublattice
+      A minimum support threshold should be selected, and the sublattice
       of concepts that meet this restriction will be displayed, allowing the
       user to explore freely. Once a node is selected, the attribute-based
       recommendation can be activated",

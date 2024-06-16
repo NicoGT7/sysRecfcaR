@@ -291,14 +291,20 @@ ui <- fluidPage(
                  width = 4,
                  fluidRow(
                    column(
-                     width = 11,
-                     sliderInput("threshold4", "Confidence threshold:",
+                     width = 7,
+                     sliderInput("threshold4", "Support threshold:",
                                  min = 0, max = 1, value = 0.8, step = 0.1)
                    ),
                    column(
                      width = 1,
                      align = "center",
                      actionButton("help4", "?", class = "help-button")
+                   ),
+                   column(
+                     width = 3,
+                     align = "center",
+                     offset = 3,
+                     actionButton("submitButton4", "Submit")
                    )
                  )
                ),
