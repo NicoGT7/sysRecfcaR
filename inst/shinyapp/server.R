@@ -43,7 +43,8 @@ server <- function(input, output, session) {
         error <<- TRUE
         shinyalert::shinyalert(title = "Error",
                                type = "error",
-                               text = "Error. Please check your csv file.")
+                               text = "Error. Please check your csv file. Maybe it does not
+                               have row names.")
         return()
       })
 
@@ -62,7 +63,8 @@ server <- function(input, output, session) {
       }, error = function(e) {
         shinyalert::shinyalert(title = "Error",
                                type = "error",
-                               text = "Error creating the formal context. Please check your input data.")
+                               text = "Error creating the formal context. Please check your input data.
+                               Maybe you have not selected the correct delimiter.")
         return(NULL)
       })
 
@@ -192,7 +194,7 @@ server <- function(input, output, session) {
     if (!is.null(calcular1())) {
       shinyWidgets::pickerInput(
         inputId = "atributosProb1",
-        label = div("Select the attributes to calculate probability:", class = "text-center"),
+        label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
         choices = attributes(),
         selected = NULL,
         multiple = TRUE
@@ -692,7 +694,7 @@ server <- function(input, output, session) {
     if (!is.null(calcular4())) {
       shinyWidgets::pickerInput(
         inputId = "atributosProb4",
-        label = div("Select the attributes to calculate probability:", class = "text-center"),
+        label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
         choices = attributes(),
         selected = NULL,
         multiple = TRUE

@@ -43,7 +43,7 @@ ui <- fluidPage(
 
 
   tabsetPanel(
-    tabPanel("Tab 1: Data import",
+    tabPanel("Data import",
              div(style = "text-align: center;",
                  h2("Upload file"),
                  fluidRow(
@@ -52,22 +52,6 @@ ui <- fluidPage(
                      align = "center",
                      wellPanel(
                        div(style = "margin: 0 auto; display: inline-block;",
-                           fluidRow(
-                             column(
-                               width = 11,
-                               align = "center",
-                               offset = 0,
-                               div(style = "display: inline-block; width: 100%; max-width: 300px;",
-                                   fileInput("file1", "Choose a CSV file (must be binary)",
-                                             accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
-                               )
-                             ),
-                             column(
-                               width = 1,
-                               align = "center",
-                               actionButton("help0", "?", class = "help-button")
-                             )
-                           ),
                            fluidRow(
                              column(
                                width = 3,
@@ -79,7 +63,7 @@ ui <- fluidPage(
                                width = 3,
                                align = "center",
                                offset = 0,
-                               checkboxInput("col1", "¿Column names?", TRUE)
+                               checkboxInput("col1", "Has row names?", TRUE)
                              ),
                              column(
                                width = 3,
@@ -101,6 +85,24 @@ ui <- fluidPage(
                                                         Single = "'"),
                                             selected = '')
                              )
+                           ),
+                           fluidRow(
+                             column(
+                               width = 11,
+                               align = "center",
+                               offset = 0,
+                               div(style = "display: inline-block; width: 100%; max-width: 300px;",
+                                   fileInput("file1", "Choose a CSV file (must be binary)",
+                                             accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
+                               )
+                             )
+                           ),
+                           fluidRow(
+                             column(
+                               width = 12,
+                               align = "center",
+                               actionButton("help0", "?", class = "help-button")
+                             )
                            )
                        )
                      )
@@ -108,7 +110,7 @@ ui <- fluidPage(
                  )
              )
     ),
-    tabPanel("Tab 2: Recommend by Attributes",
+    tabPanel("Recommend by Attributes",
              div(style = "text-align: center;",
                  h2("Recommend by Attributes")
              ),
@@ -118,7 +120,7 @@ ui <- fluidPage(
                  align = "center",
                  shinyWidgets::pickerInput(
                    inputId = "selectedAttributes1",
-                   label = div("Select the attributes:", class = "text-center"),
+                   label = div("Select initial attributes:", class = "text-center"),
                    choices = NULL,
                    selected = NULL,
                    multiple = TRUE
@@ -160,7 +162,7 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 3: Recommend by Max Cardinality",
+    tabPanel("Recommend by Max Cardinality",
              div(style = "text-align: center;",
                  h2("Recommend by Max Cardinality")
              ),
@@ -176,7 +178,7 @@ ui <- fluidPage(
                  align = "left",
                  shinyWidgets::pickerInput(
                    inputId = "selectedAttributes2",
-                   label = div("Select the attributes:", class = "text-center"),
+                   label = div("Select initial attributes:", class = "text-center"),
                    choices = NULL,
                    selected = NULL,
                    multiple = TRUE
@@ -218,7 +220,7 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 4: Recommend through iterative conversation",
+    tabPanel("Recommend through iterative conversation",
              div(style = "text-align: center;",
                  h2("Recommend through iterative conversation")
              ),
@@ -234,7 +236,7 @@ ui <- fluidPage(
                  align = "left",
                  shinyWidgets::pickerInput(
                    inputId = "selectedAttributes3",
-                   label = div("Select the attributes:", class = "text-center"),
+                   label = div("Select initial attributes:", class = "text-center"),
                    choices = NULL,
                    selected = NULL,
                    multiple = TRUE
@@ -285,7 +287,7 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Tab 5: Interactive Graph",
+    tabPanel("Interactive Graph",
              fluidRow(
                column(
                  width = 4,
