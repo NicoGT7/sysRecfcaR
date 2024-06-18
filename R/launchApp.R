@@ -3,7 +3,7 @@
 #' @return This function does not return anything. It initiates a Shiny app
 #' @import shiny
 #' @importFrom shinyWidgets pickerInput updatePickerInput
-#' @importFrom shinyjs useShinyjs hide show
+#' @importFrom shinyjs useShinyjs hide show hidden
 #' @importFrom shinythemes shinytheme
 #' @importFrom shinyalert shinyalert
 #' @importFrom dplyr filter bind_rows

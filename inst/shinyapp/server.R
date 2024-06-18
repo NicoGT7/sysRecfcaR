@@ -110,58 +110,25 @@ server <- function(input, output, session) {
 
   observeEvent(input$selectedAttributes1, {
     shinyWidgets::updatePickerInput(session, "atributosProb1", choices = attributes(), selected = NULL)
-  })
-
-  calcular1 <- eventReactive(input$saveButton1, {
-    req(input$saveButton1)
-    selected <- input$selectedAttributes1
-
-    fc2 <- fc()
-
-    set_attributes <- fcaR::Set$new(fc2$attributes)
-    set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
-
-    s <- fc2$closure(set_attributes)
-
-    concepts2 <- concepts()
-
-    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
-
-    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
-
-    return(dfSubconceptos)
+    shinyjs::hide("tabla1")
+    shinyjs::hide("dropdown1")
+    shinyjs::hide("downloadData1")
   })
 
   output$tabla1 <- DT::renderDataTable({
     req(input$saveButton1)
     req(input$atributosProb1)
 
+    selected <- input$selectedAttributes1
     columna <- input$atributosProb1
 
-    final_result <- data.frame()
+    fc2 <- fc()
 
-    `%>%` <- magrittr::`%>%`
-
-    for (i in 1:length(columna)) {
-
-      res <- calcular1() %>% dplyr::filter(.data[[columna[i]]] == 1)
-
-      result <- res[1,1:2]
-
-      result$atr <- columna[i]
-
-      for (col in 3:ncol(res)) {
-        if (any(res[1,col] == 1)) {
-          result <- cbind(result, res[1,col, drop = FALSE])
-        }
-      }
-
-      final_result <- dplyr::bind_rows(final_result, result)
-      final_result[is.na(final_result)] <- 0
-
-    }
+    final_result <- sysRecfcaR::recommend_by_attributes(fc2,selected,columna)
 
     exportData1(final_result)
+
+    `%>%` <- magrittr::`%>%`
 
     DT::datatable(final_result,
                   options = list(
@@ -190,16 +157,20 @@ server <- function(input, output, session) {
     ))
   })
 
+  observeEvent(input$saveButton1, {
+    shinyjs::show("tabla1")
+    shinyjs::show("dropdown1")
+    shinyjs::show("downloadData1")
+  })
+
   output$dropdown1 <- renderUI({
-    if (!is.null(calcular1())) {
-      shinyWidgets::pickerInput(
-        inputId = "atributosProb1",
-        label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
-        choices = attributes(),
-        selected = NULL,
-        multiple = TRUE
-      )
-    }
+    shinyWidgets::pickerInput(
+      inputId = "atributosProb1",
+      label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
+      choices = attributes(),
+      selected = NULL,
+      multiple = TRUE
+    )
   })
 
   output$downloadButtonUI1 <- renderUI({
@@ -218,44 +189,6 @@ server <- function(input, output, session) {
     }
   )
 
-  calcular2 <- eventReactive(input$saveButton2, {
-    req(input$saveButton2)
-    selected <- input$selectedAttributes2
-
-    fc2 <- fc()
-
-    set_attributes <- fcaR::Set$new(fc2$attributes)
-    set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
-
-    s <- fc2$closure(set_attributes)
-
-    concepts2 <- concepts()
-
-    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
-
-    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
-
-    dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold2, ]
-
-    result <- dfSubconceptos[,1:2]
-
-    for (col in 3:ncol(dfSubconceptos)) {
-      if (any(dfSubconceptos[,col] == 1)) {
-        result <- cbind(result, dfSubconceptos[,col, drop = FALSE])
-      }
-    }
-
-    result$ones <- rowSums(result[, 3:ncol(result)] == 1)
-
-    result <- result[order(-result$ones), ]
-
-    result$ones <- NULL
-
-    exportData2(result)
-
-    return(result)
-  })
-
   observeEvent(input$help2, {
     showModal(modalDialog(
       title = "Help Recommend by Max Cardinality",
@@ -271,16 +204,24 @@ server <- function(input, output, session) {
 
   observeEvent(input$saveButton2, {
     mostrar2(TRUE)
+    shinyjs::show("downloadData2")
   })
 
   observeEvent(input$selectedAttributes2, {
     mostrar2(FALSE)
+    shinyjs::hide("downloadData2")
   })
 
   output$tabla2 <- DT::renderDataTable({
     req(mostrar2())
     `%>%` <- magrittr::`%>%`
-    final_result <- calcular2()
+
+    fc2 <- fc()
+    selected <- input$selectedAttributes2
+    valConf <- input$threshold2
+
+    final_result <- sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
+    exportData2(final_result)
     DT::datatable(final_result,
                   options = list(
                     pageLength = 10,
@@ -327,23 +268,9 @@ server <- function(input, output, session) {
 
     idxConcept <- sysRecfcaR::getIdx(concepts2, s)
 
-    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2, idxConcept))
+    valConf <- input$threshold3
 
-    dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold3, ]
-
-    result <- dfSubconceptos[, 1:2]
-
-    for (col in 3:ncol(dfSubconceptos)) {
-      if (any(dfSubconceptos[, col] == 1)) {
-        result <- cbind(result, dfSubconceptos[, col, drop = FALSE])
-      }
-    }
-
-    result$ones <- rowSums(result[, 3:ncol(result)] == 1)
-
-    result <- result[order(-result$ones), ]
-
-    result$ones <- NULL
+    result <- sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
 
     ultimaTabla(result)
     exportData3(result)
@@ -380,23 +307,11 @@ server <- function(input, output, session) {
 
     colvalues(sysRecfcaR::getAttributes(concepts2, idxConcept))
 
-    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2, idxConcept))
+    selected <- sysRecfcaR::getAttributes(concepts2, idxConcept)
 
-    dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > input$threshold3, ]
+    valConf <- input$threshold3
 
-    result <- dfSubconceptos[, 1:2]
-
-    for (col in 3:ncol(dfSubconceptos)) {
-      if (any(dfSubconceptos[, col] == 1)) {
-        result <- cbind(result, dfSubconceptos[, col, drop = FALSE])
-      }
-    }
-
-    result$ones <- rowSums(result[, 3:ncol(result)] == 1)
-
-    result <- result[order(-result$ones), ]
-
-    result$ones <- NULL
+    result <- sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
 
     ultimaTabla(result)
     exportData3(result)
@@ -575,6 +490,11 @@ server <- function(input, output, session) {
     selected_node <- input$selected_node_id
     if (!is.null(selected_node)) {
       shinyjs::show("selected_node_attributes")
+
+      shinyjs::hide("tabla4")
+      shinyjs::hide("dropdown4")
+      shinyjs::hide("downloadData4")
+
       sublattice2 <- sublattice()
       attributes <- sysRecfcaR::getAttributes(sublattice2, as.numeric(selected_node))
 
@@ -588,29 +508,8 @@ server <- function(input, output, session) {
       idxNode(selected_node)
 
       shinyjs::show("saveButton4")
+      shinyjs::hide("downloadData4")
     }
-  })
-
-  calcular4 <- eventReactive(input$saveButton4, {
-    req(input$saveButton4)
-    sublattice2 <- sublattice()
-    idxNode2 <- idxNode()
-    selected <- sysRecfcaR::getAttributes(sublattice2, idxNode2)
-
-    fc2 <- fc()
-
-    set_attributes <- fcaR::Set$new(fc2$attributes)
-    set_attributes$assign(attributes = selected, values = rep(1,length(selected)))
-
-    s <- fc2$closure(set_attributes)
-
-    concepts2 <- concepts()
-
-    idxConcept <- sysRecfcaR::getIdx(concepts2, s)
-
-    dfSubconceptos <- as.data.frame(sysRecfcaR::getSupportSub(concepts2,idxConcept))
-
-    return(dfSubconceptos)
   })
 
   observeEvent(input$help4, {
@@ -636,46 +535,31 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$saveButton4, {
-    if (!is.null(calcular4())) {
-      shinyjs::show("tabla4")
-      shinyjs::show("dropdown4")
-      shinyjs::show("downloadData4")
-    }
+    shinyjs::show("tabla4")
+    shinyjs::show("dropdown4")
+    shinyjs::show("downloadData4")
   })
 
   output$tabla4 <- DT::renderDataTable({
     req(input$atributosProb4)
 
+    sublattice2 <- sublattice()
+    idxNode2 <- idxNode()
+    selected <- sysRecfcaR::getAttributes(sublattice2, idxNode2)
+
     columna <- input$atributosProb4
 
-    final_result <- data.frame()
+    fc2 <- fc()
 
-    `%>%` <- magrittr::`%>%`
-
-    for (i in 1:length(columna)) {
-
-      res <- calcular4() %>% dplyr::filter(.data[[columna[i]]] == 1)
-
-      result <- res[1,1:2]
-
-      result$atr <- columna[i]
-
-      for (col in 3:ncol(res)) {
-        if (any(res[1,col] == 1)) {
-          result <- cbind(result, res[1,col, drop = FALSE])
-        }
-      }
-
-      final_result <- dplyr::bind_rows(final_result, result)
-      final_result[is.na(final_result)] <- 0
-
-    }
+    final_result <- sysRecfcaR::recommend_by_attributes(fc2,selected,columna)
 
     exportData4(final_result)
 
     sublattice2 <- sublattice()
     idxNode2 <- idxNode()
     selected <- sysRecfcaR::getAttributes(sublattice2, idxNode2)
+
+    `%>%` <- magrittr::`%>%`
 
     DT::datatable(final_result,
                   options = list(
@@ -691,15 +575,13 @@ server <- function(input, output, session) {
   })
 
   output$dropdown4 <- renderUI({
-    if (!is.null(calcular4())) {
-      shinyWidgets::pickerInput(
-        inputId = "atributosProb4",
-        label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
-        choices = attributes(),
-        selected = NULL,
-        multiple = TRUE
-      )
-    }
+    shinyWidgets::pickerInput(
+      inputId = "atributosProb4",
+      label = div("Select the desired attributes to calculate recommendations:", class = "text-center"),
+      choices = attributes(),
+      selected = NULL,
+      multiple = TRUE
+    )
   })
 
   output$downloadButtonUI4 <- renderUI({

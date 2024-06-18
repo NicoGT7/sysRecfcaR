@@ -145,7 +145,7 @@ ui <- fluidPage(
                column(
                  width = 12,
                  align = "center",
-                 uiOutput("dropdown1")
+                 shinyjs::hidden(uiOutput("dropdown1"))
                )
              ),
              fluidRow(
