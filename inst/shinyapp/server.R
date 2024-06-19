@@ -124,23 +124,33 @@ server <- function(input, output, session) {
 
     fc2 <- fc()
 
-    final_result <- sysRecfcaR::recommend_by_attributes(fc2,selected,columna)
+    final_result <- tryCatch({
+      sysRecfcaR::recommend_by_attributes(fc2,selected,columna)
+    }, error = function(e) {
+      shinyalert::shinyalert(title = "Error",
+                             type = "error",
+                             text = "Error.
+                             There is no possible recommendation for the selected attributes")
+      return(NULL)
+    })
 
-    exportData1(final_result)
+    if(!is.null(final_result)){
+      exportData1(final_result)
 
-    `%>%` <- magrittr::`%>%`
+      `%>%` <- magrittr::`%>%`
 
-    DT::datatable(final_result,
-                  options = list(
-                    pageLength = 10,
-                    autoWidth = TRUE,
-                    dom = 'ftipr',
-                    class = 'stripe compact hover row-border'
-                  ), style = 'bootstrap4') %>%
-      DT::formatStyle(
-        columns = input$selectedAttributes1,
-        backgroundColor = '#cce5ff'
-      )
+      DT::datatable(final_result,
+                    options = list(
+                      pageLength = 10,
+                      autoWidth = TRUE,
+                      dom = 'ftipr',
+                      class = 'stripe compact hover row-border'
+                    ), style = 'bootstrap4') %>%
+        DT::formatStyle(
+          columns = input$selectedAttributes1,
+          backgroundColor = '#cce5ff'
+        )
+    }
   })
 
   observeEvent(input$help1, {
@@ -220,19 +230,31 @@ server <- function(input, output, session) {
     selected <- input$selectedAttributes2
     valConf <- input$threshold2
 
-    final_result <- sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
-    exportData2(final_result)
-    DT::datatable(final_result,
-                  options = list(
-                    pageLength = 10,
-                    autoWidth = TRUE,
-                    dom = 'ftipr',
-                    class = 'stripe compact hover row-border'
-                  ), style = 'bootstrap4') %>%
-      DT::formatStyle(
-        columns = input$selectedAttributes2,
-        backgroundColor = '#cce5ff'
-      )
+
+    final_result <- tryCatch({
+      sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
+    }, error = function(e) {
+      shinyalert::shinyalert(title = "Error",
+                             type = "error",
+                             text = "Error.
+                             There is no possible recommendation for the selected attributes")
+      return(NULL)
+    })
+
+    if(!is.null(final_result)){
+      exportData2(final_result)
+      DT::datatable(final_result,
+                    options = list(
+                      pageLength = 10,
+                      autoWidth = TRUE,
+                      dom = 'ftipr',
+                      class = 'stripe compact hover row-border'
+                    ), style = 'bootstrap4') %>%
+        DT::formatStyle(
+          columns = input$selectedAttributes2,
+          backgroundColor = '#cce5ff'
+        )
+    }
   })
 
   output$downloadButtonUI2 <- renderUI({
@@ -270,21 +292,31 @@ server <- function(input, output, session) {
 
     valConf <- input$threshold3
 
-    result <- sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
+    result <- tryCatch({
+      sysRecfcaR::recommend_by_max_cardinality(fc2, selected, valConf)
+    }, error = function(e) {
+      shinyalert::shinyalert(title = "Error",
+                             type = "error",
+                             text = "Error.
+                             There is no possible recommendation for the selected attributes")
+      return(NULL)
+    })
 
-    ultimaTabla(result)
-    exportData3(result)
+    if(!is.null(result)){
+      ultimaTabla(result)
+      exportData3(result)
 
-    auxVector <- concepts2$sub(idxConcept)$get_intent()
-    atrVector <- as.vector(t(as.matrix(auxVector$get_vector())))
+      auxVector <- concepts2$sub(idxConcept)$get_intent()
+      atrVector <- as.vector(t(as.matrix(auxVector$get_vector())))
 
-    val <- auxVector$get_attributes()[which(atrVector == 1)]
+      val <- auxVector$get_attributes()[which(atrVector == 1)]
 
-    historicIdx(c(historicIdx(), list(list(val, "NA"))))
+      historicIdx(c(historicIdx(), list(list(val, "NA"))))
 
-    selectedIdx(NULL)
+      selectedIdx(NULL)
 
-    return(result)
+      return(result)
+    }
   })
 
   recalcular3 <- eventReactive(input$validateButton3, {
@@ -352,20 +384,23 @@ server <- function(input, output, session) {
 
   observeEvent(input$saveButton3, {
     req(input$saveButton3)
-    output$tabla3 <- DT::renderDataTable({
-      `%>%` <- magrittr::`%>%`
-      DT::datatable(calcular3(),
-                    options = list(
-                      pageLength = 10,
-                      autoWidth = TRUE,
-                      dom = 'ftipr',
-                      class = 'stripe compact hover row-border'
-                    ), style = 'bootstrap4', selection = 'single') %>%
-        DT::formatStyle(
-          columns = colvalues(),
-          backgroundColor = '#cce5ff'
-        )
-    })
+
+    if(!is.null(calcular3())){
+      output$tabla3 <- DT::renderDataTable({
+        `%>%` <- magrittr::`%>%`
+        DT::datatable(calcular3(),
+                      options = list(
+                        pageLength = 10,
+                        autoWidth = TRUE,
+                        dom = 'ftipr',
+                        class = 'stripe compact hover row-border'
+                      ), style = 'bootstrap4', selection = 'single') %>%
+          DT::formatStyle(
+            columns = colvalues(),
+            backgroundColor = '#cce5ff'
+          )
+      })
+    }
   })
 
   observeEvent(input$tabla3_rows_selected, {
