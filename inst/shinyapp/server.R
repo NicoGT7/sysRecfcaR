@@ -20,6 +20,9 @@ server <- function(input, output, session) {
   mostrar2 <- reactiveVal(FALSE)
   colvalues <- reactiveVal(NULL)
 
+  observeEvent(input$reset1, {
+    session$reload()
+  })
 
   observeEvent(input$file1, {
     req(input$file1)
@@ -73,7 +76,9 @@ server <- function(input, output, session) {
 
         tryCatch({
           fc2$find_concepts()
-          showNotification("File processed successfully.", type = "message")
+          showNotification("File processed successfully.
+                           Computing lattice. Please, wait for the computation to finish.
+                           Do not close this window.", type = "message")
         }, error = function(e) {
           shinyalert::shinyalert(title = "Error",
                                  type = "error",
@@ -91,6 +96,19 @@ server <- function(input, output, session) {
           shinyWidgets::updatePickerInput(session, "selectedAttributes1", choices = attributes())
           shinyWidgets::updatePickerInput(session, "selectedAttributes2", choices = attributes())
           shinyWidgets::updatePickerInput(session, "selectedAttributes3", choices = attributes())
+
+          showNotification("Computation finished, recommendation strategies are now available", type = "message")
+
+          ultimaTabla(NULL)
+          semaforo(FALSE)
+          historicIdx(NULL)
+          selectedIdx(NULL)
+
+          sublattice(NULL)
+          idxNode(NULL)
+
+          mostrar2(FALSE)
+          colvalues(NULL)
         }
       }
     }

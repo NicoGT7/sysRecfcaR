@@ -32,6 +32,7 @@ ui <- fluidPage(
         cursor: pointer;
         padding: 0;
         margin-bottom: 5px;
+        margin-top: 5px;
       }
       .help-button:hover {
         background-color: #0056b3;
@@ -88,13 +89,20 @@ ui <- fluidPage(
                            ),
                            fluidRow(
                              column(
-                               width = 11,
+                               width = 12,
                                align = "center",
                                offset = 0,
                                div(style = "display: inline-block; width: 100%; max-width: 300px;",
                                    fileInput("file1", "Choose a CSV file (must be binary)",
                                              accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv"))
                                )
+                             )
+                           ),
+                           fluidRow(
+                             column(
+                               width = 12,
+                               align = "center",
+                               actionButton("reset1", "Reset", class = "btn-primary")
                              )
                            ),
                            fluidRow(
