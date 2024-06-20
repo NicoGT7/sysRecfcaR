@@ -1,10 +1,16 @@
 Package: sysRecfcaR
-Title: What the Package Does (One Line, Title Case)
+Title: Recommendation Systems based on FCA
 Version: 0.0.0.9000
 Authors@R: 
-    person("Nicolas", "Garcia", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person("Nicolas", "Garcia", , "nicojiji10@uma.es", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+      person("Domingo", "Lopez", , "dominlopez@uma.es", role = c("ctb")),
+      person("Angel", "Mora", , "amora@uma.es", role = c("ctb")))
+Maintainer: Nicolas Garcia <nicojiji10@uma.es>
+Description: Use the mathematical theory FCA to develop different strategies 
+      that will act as the core of the recommendation system. Additionally, it 
+      can be used by interacting with the built-in application or by using its 
+      own methods.
 License: MIT + file LICENSE
 Imports:
     Matrix,

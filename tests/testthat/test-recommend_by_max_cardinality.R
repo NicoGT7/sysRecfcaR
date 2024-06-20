@@ -15,12 +15,12 @@ test_that("recommend_by_max_cardinality returns correct recommends", {
     201, 0.67, 1, 1, 1, 1, 1, 1, 1, 1
   ), nrow = 2, byrow = TRUE)
 
-  colnames(matrix) <- c("idx", "confidence", "Traveler type=Solo", "Pool", "Gym", "Tennis court",
+  colnames(matrix) <- c("idx", "Confidence", "Traveler type=Solo", "Pool", "Gym", "Tennis court",
                         "Spa", "Casino", "Free internet", "Stars=4")
 
   df <- as.data.frame(matrix, stringsAsFactors = FALSE)
 
-  df <- df[order(df$confidence), ]
+  df <- df[order(df$Confidence), ]
 
   expect_equal(result, df)
 })

@@ -21,7 +21,7 @@ test_that("getSupportSub returns correct matrix", {
     2082, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ), nrow = 8, byrow = TRUE)
   colnames(expected) <- c(
-    "idx", "confidence", "Period of stay=Dec-Feb", "Period of stay=Jun-Aug", "Period of stay=Mar-May",
+    "idx", "Confidence", "Period of stay=Dec-Feb", "Period of stay=Jun-Aug", "Period of stay=Mar-May",
     "Period of stay=Sep-Nov", "Traveler type=Business", "Traveler type=Couples", "Traveler type=Families",
     "Traveler type=Friends", "Traveler type=Solo", "Pool", "Gym", "Tennis court", "Spa", "Casino", "Free internet",
     "Stars=3", "Stars=3.5", "Stars=4", "Stars=4.5", "Stars=5", "Score=1", "Score=2", "Score=3", "Score=4", "Score=5"

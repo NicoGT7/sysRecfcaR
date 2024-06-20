@@ -311,7 +311,7 @@ server <- function(input, output, session) {
 
       val <- auxVector$get_attributes()[which(atrVector == 1)]
 
-      historicIdx(c(historicIdx(), list(list(val, "NA"))))
+      historicIdx(c(historicIdx(), list(list(val, 1))))
 
       selectedIdx(NULL)
 
@@ -328,7 +328,7 @@ server <- function(input, output, session) {
     }
 
     prevDF <- ultimaTabla()
-    prevConf <- prevDF[prevDF$idx == idxConcept, "confidence"]
+    prevConf <- prevDF[prevDF$idx == idxConcept, "Confidence"]
 
     fc2 <- fc()
     concepts2 <- concepts()

@@ -23,7 +23,7 @@ getSupportSub <- function(concepts,idx){
   subconcepts <- concepts$subconcepts(C)
 
   matrix <- matrix(nrow = subconcepts$size(), ncol = length(concepts$sub(1)$get_intent()$get_attributes()) + 2)
-  colNames <- c("idx", "confidence", concepts$sub(1)$get_intent()$get_attributes())
+  colNames <- c("idx", "Confidence", concepts$sub(1)$get_intent()$get_attributes())
   colnames(matrix) <- colNames
 
   for (i in 1:subconcepts$size()) {

@@ -43,7 +43,7 @@ recommend_by_attributes <- function(fc, selectedAttributes, probAttributes){
 
     result <- res[1,1:2]
 
-    result$atr <- probAttributes[i]
+    result$Attribute <- probAttributes[i]
 
     for (col in 3:ncol(res)) {
       if (any(res[1,col] == 1)) {

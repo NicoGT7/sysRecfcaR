@@ -33,7 +33,7 @@ recommend_by_max_cardinality <- function(fc, selectedAttributes, conf_value){
 
   dfSubconceptos <- as.data.frame(getSupportSub(concepts,idxConcept))
 
-  dfSubconceptos <- dfSubconceptos[dfSubconceptos$confidence > conf_value, ]
+  dfSubconceptos <- dfSubconceptos[dfSubconceptos$Confidence > conf_value, ]
 
   result <- dfSubconceptos[,1:2]
 

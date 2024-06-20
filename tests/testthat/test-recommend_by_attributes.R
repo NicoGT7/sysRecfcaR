@@ -13,7 +13,7 @@ test_that("recommend_by_attributes returns correct recommends", {
     498, 0.28, "Stars=4", 1, 1, 1, 1, 1, 1
   ), nrow = 1, byrow = TRUE)
 
-  colnames(matrix) <- c("idx", "confidence", "atr", "Traveler type=Couples",
+  colnames(matrix) <- c("idx", "Confidence", "Attribute", "Traveler type=Couples",
                         "Pool", "Gym", "Spa", "Casino", "Stars=4")
 
   expected <- as.data.frame(matrix, stringsAsFactors = FALSE)
@@ -31,7 +31,7 @@ test_that("recommend_by_attributes returns correct recommends", {
     381, 0.49, "Score=5", 1, 1, 1, 1, 1, 1, 0, 0, 1
   ), nrow = 3, byrow = TRUE)
 
-  colnames(matrix2) <- c("idx", "confidence", "atr", "Traveler type=Families", "Pool", "Gym", "Spa", "Casino",
+  colnames(matrix2) <- c("idx", "Confidence", "Attribute", "Traveler type=Families", "Pool", "Gym", "Spa", "Casino",
                         "Free internet", "Score=3", "Score=4", "Score=5")
 
   df2 <- as.data.frame(matrix2, stringsAsFactors = FALSE)
